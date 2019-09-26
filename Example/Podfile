@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'HSYNetworkToolsKit_Example' do
+  pod 'HSYNetworkToolsKit', :path => '../'
+
+  target 'HSYNetworkToolsKit_Tests' do
+    inherit! :search_paths
+
+    pod 'FBSnapshotTestCase'
+  end
+end
