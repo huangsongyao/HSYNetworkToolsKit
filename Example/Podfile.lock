@@ -1,0 +1,80 @@
+PODS:
+  - AFNetworking (3.2.1):
+    - AFNetworking/NSURLSession (= 3.2.1)
+    - AFNetworking/Reachability (= 3.2.1)
+    - AFNetworking/Security (= 3.2.1)
+    - AFNetworking/Serialization (= 3.2.1)
+    - AFNetworking/UIKit (= 3.2.1)
+  - AFNetworking/NSURLSession (3.2.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.1)
+  - AFNetworking/Security (3.2.1)
+  - AFNetworking/Serialization (3.2.1)
+  - AFNetworking/UIKit (3.2.1):
+    - AFNetworking/NSURLSession
+  - FBSnapshotTestCase (2.1.4):
+    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
+  - FBSnapshotTestCase/Core (2.1.4)
+  - FBSnapshotTestCase/SwiftSupport (2.1.4):
+    - FBSnapshotTestCase/Core
+  - HSYMacroKit (0.1.2)
+  - HSYMethodsToolsKit (0.1.1):
+    - HSYMacroKit
+    - JSONModel
+    - ReactiveObjC
+    - SDWebImage
+  - HSYNetworkToolsKit (0.1.0):
+    - AFNetworking
+    - HSYMacroKit
+    - HSYMethodsToolsKit
+  - JSONModel (1.8.0)
+  - ReactiveObjC (3.1.1)
+  - SDWebImage (5.2.0):
+    - SDWebImage/Core (= 5.2.0)
+  - SDWebImage/Core (5.2.0)
+
+DEPENDENCIES:
+  - FBSnapshotTestCase
+  - HSYMacroKit (from `https://github.com/huangsongyao/HSYMacroKit.git`)
+  - HSYMethodsToolsKit (from `https://github.com/huangsongyao/HSYMethodsToolsKit.git`)
+  - HSYNetworkToolsKit (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
+    - FBSnapshotTestCase
+    - JSONModel
+    - ReactiveObjC
+    - SDWebImage
+
+EXTERNAL SOURCES:
+  HSYMacroKit:
+    :git: https://github.com/huangsongyao/HSYMacroKit.git
+  HSYMethodsToolsKit:
+    :git: https://github.com/huangsongyao/HSYMethodsToolsKit.git
+  HSYNetworkToolsKit:
+    :path: "../"
+
+CHECKOUT OPTIONS:
+  HSYMacroKit:
+    :commit: 895f7b8866ad5ce8830af54a063f7d0730fa54eb
+    :git: https://github.com/huangsongyao/HSYMacroKit.git
+  HSYMethodsToolsKit:
+    :commit: a64bd8f5f96ed34932bdf5d940eb4e535f9ebeb2
+    :git: https://github.com/huangsongyao/HSYMethodsToolsKit.git
+
+SPEC CHECKSUMS:
+  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  HSYMacroKit: 4cc5705220161ae193c1dd2fec2a8e49b149d1c7
+  HSYMethodsToolsKit: c67df808bc796a5de4549f5b9e421afeceaf453b
+  HSYNetworkToolsKit: 606d504b174475ec5fd70de819376737c91c0af3
+  JSONModel: 02ab723958366a3fd27da57ea2af2113658762e9
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
+  SDWebImage: 609192dcf3898c910a2848032372ead951e66364
+
+PODFILE CHECKSUM: 252dedef4661cba004d3af952ea4807bd824674f
+
+COCOAPODS: 1.7.5

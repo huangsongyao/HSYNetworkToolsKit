@@ -9,5 +9,8 @@ target 'HSYNetworkToolsKit_Example' do
     inherit! :search_paths
 
     pod 'FBSnapshotTestCase'
+    pod 'HSYMethodsToolsKit', :git=> 'https://github.com/huangsongyao/HSYMethodsToolsKit.git'
+    pod 'HSYMacroKit', :git=> 'https://github.com/huangsongyao/HSYMacroKit.git'
+    
   end
 end

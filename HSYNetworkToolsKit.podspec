@@ -21,16 +21,16 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/317398895@qq.com/HSYNetworkToolsKit'
+  s.homepage         = 'https://github.com/huangsongyao/HSYNetworkToolsKit'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { '317398895@qq.com' => '317398895@qq.com' }
-  s.source           = { :git => 'https://github.com/317398895@qq.com/HSYNetworkToolsKit.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/huangsongyao/HSYNetworkToolsKit.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'HSYNetworkToolsKit/Classes/**/*'
+  s.source_files = 'HSYNetworkToolsKit/Classes/**/*.{h,m}'
   
   # s.resource_bundles = {
   #   'HSYNetworkToolsKit' => ['HSYNetworkToolsKit/Assets/*.png']
@@ -38,5 +38,9 @@ TODO: Add long description of the pod here.
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'AFNetworking'
+  #HSYMethodsToolsKit依赖HSYMacroKit，即HSYNetworkToolsKit间接依赖HSYMacroKit，所以需要声明HSYNetworkToolsKit对HSYMacroKit的直接依赖
+  s.dependency 'HSYMethodsToolsKit'
+  s.dependency 'HSYMacroKit'
+  
 end
