@@ -53,7 +53,7 @@
 
 
 //刘海屏
-#define IS_iPhoneX \
+#define HSY_IS_iPhoneX \
 ({BOOL isPhoneX = NO;\
 if (@available(iOS 11.0, *)) {\
 isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom > 0.0;\

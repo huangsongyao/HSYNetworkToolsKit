@@ -9,6 +9,7 @@
 #import <SafariServices/SafariServices.h>
 #import "HSYToolsMacro.h"
 #import "UIApplication+AppDelegates.h"
+#import "HSYToolsMacro.h"
 
 @implementation UIApplication (OpenURL)
 

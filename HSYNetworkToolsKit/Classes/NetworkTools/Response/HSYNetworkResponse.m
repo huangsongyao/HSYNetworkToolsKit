@@ -7,37 +7,59 @@
 
 #import "HSYNetworkResponse.h"
 
-@interface NSArray (Keys)
-
-- (NSArray<NSString *> *)originalRequestHeaderKeys;
-
-@end
-
-@implementation NSArray (Keys)
-
-- (NSArray<NSString *> *)originalRequestHeaderKeys
-{
-    NSMutableArray<NSString *> *originalRequestHeaderKeys = [NSMutableArray arrayWithCapacity:self.count];
-    for (NSDictionary *originalHeader in self) {
-        [originalRequestHeaderKeys addObject:originalHeader.allKeys.firstObject];
-    }
-    return originalRequestHeaderKeys.mutableCopy;
-}
-
-@end
-
 @implementation HSYNetworkResponse
 
-- (NSArray<NSDictionary *> *)networkingRequestHeaders:(NSArray<NSDictionary *> *)originalRequestHeaders
+- (instancetype)initWithTask:(NSURLSessionTask *)sessionDataTask
+                withResponse:(nullable id)response
+                       error:(nullable NSError *)error
+          httpRequestMethods:(kHSYNetworkingToolsHttpRequestMethods)requestMethods
 {
-    NSMutableArray<NSDictionary *> *requestHeaders = [[NSMutableArray alloc] initWithArray:self.requestHeaders];
-    NSArray<NSString *> *originalRequestHeaderKeys = originalRequestHeaders.originalRequestHeaderKeys;
-    for (NSDictionary *originalHeader in originalRequestHeaderKeys) {
-//        if ([]) {
-//            <#statements#>
-//        }
+    if (self = [super init]) {
+        _urlSessionDataTask = sessionDataTask;
+        _error = error;
+        _response = response;
+        _httpStatusCode = self.hsy_urlRequestResponseStatusCode;
+        _requestMethods = requestMethods;
     }
-    return @[];
+    return self;
+}
+
+- (instancetype)initWithTask:(NSURLSessionTask *)sessionDataTask
+                   withError:(NSError *)error
+          httpRequestMethods:(kHSYNetworkingToolsHttpRequestMethods)requestMethods
+{
+    return [self initWithTask:sessionDataTask
+                 withResponse:nil
+                        error:error
+           httpRequestMethods:requestMethods];
+} 
+
+- (instancetype)initWithTask:(NSURLSessionTask *)sessionDataTask
+                withResponse:(id)response
+          httpRequestMethods:(kHSYNetworkingToolsHttpRequestMethods)requestMethods
+{
+    return [self initWithTask:sessionDataTask
+                 withResponse:response
+                        error:nil
+           httpRequestMethods:requestMethods];
+}
+
+- (NSInteger)hsy_urlRequestResponseStatusCode
+{
+    NSHTTPURLResponse *urlResponse = (NSHTTPURLResponse *)self.urlSessionDataTask.response;
+    return urlResponse.statusCode;
+}
+
+- (void)hsy_downloadWithCancelDatas:(HSYNetworkResponseDownloadCancelDatasBlock)cancel
+{
+    NSURLSessionDownloadTask *downloadTask = (NSURLSessionDownloadTask *)self.urlSessionDataTask;
+    @weakify(self);
+    [downloadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
+        @strongify(self);
+        if (cancel) {
+            cancel(self, resumeData);
+        }
+    }];
 }
 
 @end

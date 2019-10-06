@@ -24,7 +24,7 @@
 {
     CGFloat height = [UIApplication hsy_iPhoneStatusBarSize].height;
     if (!height) {
-        height = (IS_iPhoneX ? 44.0f : 20.0f);
+        height = (HSY_IS_iPhoneX ? 44.0f : 20.0f);
     }
     return height;
 }

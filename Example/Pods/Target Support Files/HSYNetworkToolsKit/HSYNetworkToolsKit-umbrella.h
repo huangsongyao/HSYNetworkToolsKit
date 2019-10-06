@@ -10,6 +10,8 @@
 #endif
 #endif
 
+#import "AFHTTPSessionManager+RACSignal.h"
+#import "AFURLSessionManager+RACSignal.h"
 #import "HSYNetworkError.h"
 #import "HSYNetworkTools.h"
 #import "HSYNetworkRequest.h"

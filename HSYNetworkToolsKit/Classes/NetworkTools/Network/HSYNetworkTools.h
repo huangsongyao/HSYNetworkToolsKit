@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import "HSYNetworkRequest.h"
+#import "AFHTTPSessionManager+RACSignal.h"
+#import "AFURLSessionManager+RACSignal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,7 +27,7 @@ typedef NSString *HSYNetworkingToolsUrlSession;
 FOUNDATION_EXPORT HSYNetworkingToolsUrlSession const _Nullable HSYNetworkingToolsUrlResponseSerializerForKey;
 FOUNDATION_EXPORT HSYNetworkingToolsUrlSession const _Nullable HSYNetworkingToolsUrlSecurityPolicyForKey;
 
-@class RACSignal;
+@class RACSignal, HSYNetworkResponse;
 @interface HSYNetworkTools : NSObject
 
 /**
@@ -63,7 +65,7 @@ FOUNDATION_EXPORT HSYNetworkingToolsUrlSession const _Nullable HSYNetworkingTool
  */
 - (void)hsy_urlSessionConfigs:(NSDictionary<HSYNetworkingToolsUrlSession, id> *)configs;
 
-#pragma mark - Methods
+#pragma mark - HTTP Methods
 
 /**
  http-get请求
@@ -72,8 +74,8 @@ FOUNDATION_EXPORT HSYNetworkingToolsUrlSession const _Nullable HSYNetworkingTool
  @param paramter 请求参数
  @return RACSignal
  */
-- (RACSignal *)hsy_requestByGet:(NSString *)path
-                requestParamter:(HSYNetworkRequest *)paramter;
+- (RACSignal<HSYNetworkResponse *> *)hsy_requestByGet:(NSString *)path
+                                      requestParamter:(HSYNetworkRequest *)paramter;
 
 /**
  http-get请求
@@ -82,7 +84,7 @@ FOUNDATION_EXPORT HSYNetworkingToolsUrlSession const _Nullable HSYNetworkingTool
  @param paramter 请求参数
  @return RACSignal
  */
-- (RACSignal *)hsy_requestByGet:(NSString *)path
+- (RACSignal<HSYNetworkResponse *> *)hsy_requestByGet:(NSString *)path
                        paramter:(NSDictionary *)paramter;
 
 /**
@@ -92,7 +94,7 @@ FOUNDATION_EXPORT HSYNetworkingToolsUrlSession const _Nullable HSYNetworkingTool
  @param paramter 请求参数
  @return RACSignal
  */
-- (RACSignal *)hsy_requestByPost:(NSString *)path
+- (RACSignal<HSYNetworkResponse *> *)hsy_requestByPost:(NSString *)path
                  requestParamter:(HSYNetworkRequest *)paramter;
 
 /**
@@ -102,10 +104,58 @@ FOUNDATION_EXPORT HSYNetworkingToolsUrlSession const _Nullable HSYNetworkingTool
  @param paramter 请求参数
  @return RACSignal
  */
-- (RACSignal *)hsy_requestByPost:(NSString *)path
-                        paramter:(NSDictionary *)paramter;
+- (RACSignal<HSYNetworkResponse *> *)hsy_requestByPost:(NSString *)path
+                                              paramter:(NSDictionary *)paramter;
 
+#pragma mark - File Methods
 
+/**
+ post请求格式的文件下载方法
+
+ @param urlString 文件下载的完整url地址
+ @param filePath 文件下载写入的本地沙盒地址
+ @param taskProgressBlock 下载任务进度block
+ @return RACSignal-下载结果
+ */
+- (RACSignal<HSYNetworkResponse *> *)hsy_fileDownloadByPost:(NSString *)urlString
+                                                forFilePath:(NSString *)filePath
+                                      withFileDataTaskBlock:(AFURLSessionManagerFileDataTaskBlock)taskProgressBlock;
+
+/**
+ get请求格式的文件下载方法
+
+ @param urlString 文件下载的完整url地址
+ @param filePath 文件下载写入的本地沙盒地址
+ @param taskProgressBlock 下载任务进度block
+ @return RACSignal-下载结果
+ */
+- (RACSignal<HSYNetworkResponse *> *)hsy_fileDownloadByGet:(NSString *)urlString
+                                               forFilePath:(NSString *)filePath
+                                     withFileDataTaskBlock:(AFURLSessionManagerFileDataTaskBlock)taskProgressBlock;
+
+/**
+ post请求格式的文件上传方法
+
+ @param urlString 文件上传的完整url地址
+ @param fileData 要上传的本地文件的二进制数据
+ @param taskProgressBlock 上传任务的进度block
+ @return RACSignal-上传结果
+ */
+- (RACSignal<HSYNetworkResponse *> *)hsy_fileUploadByPost:(NSString *)urlString
+                                              forFileData:(NSData *)fileData
+                                    withFileDataTaskBlock:(AFURLSessionManagerFileDataTaskBlock)taskProgressBlock;
+
+/**
+ get请求格式的文件上传方法
+ 
+ @param urlString 文件上传的完整url地址
+ @param fileData 要上传的本地文件的二进制数据
+ @param taskProgressBlock 上传任务的进度block
+ @return RACSignal-上传结果
+ */
+- (RACSignal<HSYNetworkResponse *> *)hsy_fileUploadByGet:(NSString *)urlString
+                                             forFileData:(NSData *)fileData
+                                   withFileDataTaskBlock:(AFURLSessionManagerFileDataTaskBlock)taskProgressBlock;
 @end
 
 NS_ASSUME_NONNULL_END

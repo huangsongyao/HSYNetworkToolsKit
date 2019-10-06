@@ -83,6 +83,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (RACDisposable *)hsy_performCompletedSignal;
 
+/**
+ 对RACSubscriber协议对象增加sendNext:之后执行sendCompleted
+ 
+ @param subscriber id<RACSubscriber>
+ @param signal sendNext:方法的参数
+ */
++ (void)hsy_performSendSignal:(id<RACSubscriber>)subscriber forObject:(id)signal;
+
 #pragma mark - Then Signals
 
 /**

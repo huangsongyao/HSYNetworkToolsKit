@@ -72,6 +72,14 @@
     return [[self deliverOn:[RACScheduler mainThreadScheduler]] subscribeCompleted:^{}];
 }
 
++ (void)hsy_performSendSignal:(id<RACSubscriber>)subscriber forObject:(id)signal
+{
+    if ([subscriber conformsToProtocol:@protocol(RACSubscriber)]) {
+        [subscriber sendNext:signal];
+        [subscriber sendCompleted];
+    }
+}
+
 #pragma mark - Then Signals
 
 - (RACSignal<RACTuple *> *)hsy_thenSignal:(RACSignal *)signal

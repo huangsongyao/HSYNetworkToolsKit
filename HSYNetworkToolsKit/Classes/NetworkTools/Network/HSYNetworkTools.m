@@ -6,7 +6,6 @@
 //
 
 #import "HSYNetworkTools.h"
-#import <AFNetworking/AFNetworking.h>
 #import "HSYToolsMacro.h"
 
 //请求域名的配置key
@@ -126,7 +125,7 @@ static HSYNetworkTools *networkTools = nil;
 
 @end
 
-@implementation HSYNetworkTools
+@implementation HSYNetworkTools 
 
 + (instancetype)sharedInstance
 {
@@ -143,7 +142,13 @@ static HSYNetworkTools *networkTools = nil;
 {
     if (!_hsy_httpSessionManager) {
         _hsy_httpSessionManager = [AFHTTPSessionManager manager];
-        _hsy_httpSessionManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"image/jpeg", @"text/plain", nil];
+        NSSet *defaultSets = [NSSet setWithObjects:@"application/json",
+                                                   @"text/json",
+                                                   @"text/javascript",
+                                                   @"text/html",
+                                                   @"image/jpeg",
+                                                   @"text/plain", nil];
+        _hsy_httpSessionManager.responseSerializer.acceptableContentTypes = defaultSets;
     }
     return _hsy_httpSessionManager;
 }
@@ -159,24 +164,24 @@ static HSYNetworkTools *networkTools = nil;
 
 #pragma mark - Clear ---> Headers
 
-- (void)clearAllHeaders
+- (void)hsy_clearAllHeaders
 {
     [self.hsy_httpSessionManager.requestSerializer clearAuthorizationHeader];
 }
 
-- (NSArray<NSDictionary *> *)originalRequestHeaders
+- (NSArray<NSDictionary *> *)hsy_originalRequestHeaders
 {
     NSDictionary *requestHeaders = self.hsy_httpSessionManager.requestSerializer.HTTPRequestHeaders;
     NSMutableArray<NSDictionary *> *realRequestHeaders = [NSMutableArray arrayWithCapacity:requestHeaders.allKeys.count];
     for (NSString *forKey in requestHeaders.allKeys) {
         [realRequestHeaders addObject:@{forKey : requestHeaders[forKey]}];
     }
-    return realRequestHeaders;
+    return realRequestHeaders.mutableCopy;
 }
 
 #pragma mark - Base Url
 
-- (void)baseUrlStringConfigs:(NSDictionary<HSYNetworkingToolsBaseUrl, NSString *> *)configs
+- (void)hsy_baseUrlStringConfigs:(NSDictionary<HSYNetworkingToolsBaseUrl, NSString *> *)configs
 {
     NSLog(@"\n ========================================================================== ");
     baseUrlString = configs[HSYNetworkingToolsBaseUrlStringForKey];
@@ -186,7 +191,7 @@ static HSYNetworkTools *networkTools = nil;
     NSParameterAssert([baseUrlString hasPrefix:@"http"]);
 }
 
-- (NSString *)networkingToolUrlString:(NSString *)urlPath
+- (NSString *)hsy_networkingToolUrlString:(NSString *)urlPath
 {
     NSString *url = [NSString stringWithFormat:@"%@%@", baseUrlString, urlPath];
     return url;
@@ -230,34 +235,91 @@ static HSYNetworkTools *networkTools = nil;
     }
 }
 
-#pragma mark - Methods
+#pragma mark - HTTP Methods
 
-//- (RACSignal *)hsy_requestByGet:(NSString *)path requestParamter:(HSYNetworkRequest *)paramter
-//{
-//    if (paramter.requestHeaders.count) {
-//        NSDictionary *originalRequestHeaders = [self.originalRequestHeaders mutableCopy];
-//        NSArray<NSDictionary *> *requestHeaders = [paramter networkingRequestHeaders:originalRequestHeaders];
-//        [self clearAllHeaders];
-//        [self.hsy_httpSessionManager xqc_setHeaders:requestHeaders];
-//    }
-//    return [self xqc_requestByGet:path paramter:paramter.paramter];
-//}
-//
-//- (RACSignal *)hsy_requestByGet:(NSString *)path paramter:(NSDictionary *)paramter
-//{
-//    NSString *url = [self networkingToolUrlString:path];
-//    return [self.hsy_httpSessionManager xqc_getRequest:url paramters:path];
-//}
-//
-//- (RACSignal *)hsy_requestByPost:(NSString *)path requestParamter:(HSYNetworkRequest *)paramter
-//{
-//    
-//}
-//
-//- (RACSignal *)hsy_requestByPost:(NSString *)path paramter:(NSDictionary *)paramter
-//{
-//    
-//}
+- (void)hsy_resetRequestHeaders:(HSYNetworkRequest *)paramter
+{
+    if (paramter.requestHeaders.count) {
+        /*
+         1.先将上一次请求的请求头信息和本次请求新增的请求头信息合并整理出一份本次请求的请求头信息;
+         2.然后再移除ANF中缓存的上一次请求头信息;
+         3.最后重新将本次请求的请求头信息set进去;
+         */
+        NSArray<NSDictionary *> *originalRequestHeaders = self.hsy_originalRequestHeaders;
+        NSArray<NSDictionary *> *requestHeaders = [paramter hsy_networkingRequestHeaders:originalRequestHeaders];
+        [self hsy_clearAllHeaders];
+        [self.hsy_httpSessionManager hsy_setHeaders:requestHeaders];
+    }
+}
 
+- (RACSignal *)hsy_requestByGet:(NSString *)path requestParamter:(HSYNetworkRequest *)paramter
+{
+    [self hsy_resetRequestHeaders:paramter];
+    return [self hsy_requestByGet:path paramter:paramter.paramter];
+}
+
+- (RACSignal *)hsy_requestByGet:(NSString *)path paramter:(NSDictionary *)paramter
+{
+    NSString *url = [self hsy_networkingToolUrlString:path];
+    return [self.hsy_httpSessionManager hsy_getRequest:url paramters:paramter];
+}
+
+- (RACSignal *)hsy_requestByPost:(NSString *)path requestParamter:(HSYNetworkRequest *)paramter
+{
+    [self hsy_resetRequestHeaders:paramter];
+    return [self hsy_requestByPost:path paramter:paramter.paramter];
+}
+
+- (RACSignal *)hsy_requestByPost:(NSString *)path paramter:(NSDictionary *)paramter
+{
+    NSString *url = [self hsy_networkingToolUrlString:path];
+    return [self.hsy_httpSessionManager hsy_getRequest:url paramters:paramter];
+}
+
+#pragma mark - File Methods
+
+- (RACSignal *)hsy_fileDownloadByPost:(NSString *)urlString
+                          forFilePath:(NSString *)filePath
+                withFileDataTaskBlock:(AFURLSessionManagerFileDataTaskBlock)taskProgressBlock
+{
+    NSURL *url = [NSURL URLWithString:urlString];
+    return [self.hsy_urlSessionManager hsy_downloadFileRequestUrl:url
+                                                      forFilePath:filePath
+                                                    setHTTPMethod:kHSYNetworkingToolsHttpRequestMethodsPost
+                                               completionProgress:taskProgressBlock];
+}
+
+- (RACSignal *)hsy_fileDownloadByGet:(NSString *)urlString
+                         forFilePath:(NSString *)filePath
+               withFileDataTaskBlock:(AFURLSessionManagerFileDataTaskBlock)taskProgressBlock
+{
+    NSURL *url = [NSURL URLWithString:urlString];
+    return [self.hsy_urlSessionManager hsy_downloadFileRequestUrl:url
+                                                      forFilePath:filePath
+                                                    setHTTPMethod:kHSYNetworkingToolsHttpRequestMethodsGet
+                                               completionProgress:taskProgressBlock];
+}
+
+- (RACSignal *)hsy_fileUploadByPost:(NSString *)urlString
+                        forFileData:(NSData *)fileData
+              withFileDataTaskBlock:(AFURLSessionManagerFileDataTaskBlock)taskProgressBlock
+{
+    NSURL *url = [NSURL URLWithString:urlString];
+    return [self.hsy_urlSessionManager hsy_uploadFileRequestUrl:url
+                                                    forFileData:fileData
+                                                  setHTTPMethod:kHSYNetworkingToolsHttpRequestMethodsPost
+                                             completionProgress:taskProgressBlock];
+}
+
+- (RACSignal *)hsy_fileUploadByGet:(NSString *)urlString
+                       forFileData:(NSData *)fileData
+             withFileDataTaskBlock:(AFURLSessionManagerFileDataTaskBlock)taskProgressBlock
+{
+    NSURL *url = [NSURL URLWithString:urlString];
+    return [self.hsy_urlSessionManager hsy_uploadFileRequestUrl:url
+                                                    forFileData:fileData
+                                                  setHTTPMethod:kHSYNetworkingToolsHttpRequestMethodsGet
+                                             completionProgress:taskProgressBlock];
+}
 
 @end
