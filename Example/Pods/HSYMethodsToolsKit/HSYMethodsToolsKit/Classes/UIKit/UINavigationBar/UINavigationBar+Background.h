@@ -11,6 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UINavigationBar (Background)
 
+- (void)hsy_setNavigationBarBackgroundImage:(UIImage *)backgroundImage;
+- (void)hsy_setNavigationBarBottomlineColor:(UIColor *)color;
+- (void)hsy_clearNavigationBarBottomline;
+
 @end
 
 NS_ASSUME_NONNULL_END
