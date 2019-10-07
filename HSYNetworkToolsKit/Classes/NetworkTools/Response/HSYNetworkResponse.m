@@ -7,16 +7,23 @@
 
 #import "HSYNetworkResponse.h"
 
+HSYNetworkResponseRequestDataString const _Nullable HSYNetworkResponseRequestDataStringDataTaskForKey       = @"urlSessionDataTask";
+HSYNetworkResponseRequestDataString const _Nullable HSYNetworkResponseRequestDataStringErrorForKey          = @"error";
+HSYNetworkResponseRequestDataString const _Nullable HSYNetworkResponseRequestDataStringResponseForKey       = @"response";
+HSYNetworkResponseRequestDataString const _Nullable HSYNetworkResponseRequestDataStringUrlForKey            = @"requestUrlString";
+HSYNetworkResponseRequestDataString const _Nullable HSYNetworkResponseRequestDataStringParamtersForKey      = @"requestParamters";
+HSYNetworkResponseRequestDataString const _Nullable HSYNetworkResponseRequestDataStringHeadersForKey        = @"requestHeaders";
+
 @implementation HSYNetworkResponse
 
-- (instancetype)initWithTask:(NSURLSessionTask *)sessionDataTask
+- (instancetype)initWithTask:(nullable NSURLSessionTask *)sessionDataTask
                 withResponse:(nullable id)response
                        error:(nullable NSError *)error
           httpRequestMethods:(kHSYNetworkingToolsHttpRequestMethods)requestMethods
 {
     if (self = [super init]) {
         _urlSessionDataTask = sessionDataTask;
-        _error = error;
+        _error = [HSYNetworkError hsy_error:error];
         _response = response;
         _httpStatusCode = self.hsy_urlRequestResponseStatusCode;
         _requestMethods = requestMethods;
@@ -24,13 +31,11 @@
     return self;
 }
 
-- (instancetype)initWithTask:(NSURLSessionTask *)sessionDataTask
-                   withError:(NSError *)error
-          httpRequestMethods:(kHSYNetworkingToolsHttpRequestMethods)requestMethods
+- (instancetype)initWithMethods:(kHSYNetworkingToolsHttpRequestMethods)requestMethods
 {
-    return [self initWithTask:sessionDataTask
+    return [self initWithTask:nil
                  withResponse:nil
-                        error:error
+                        error:nil
            httpRequestMethods:requestMethods];
 } 
 
@@ -60,6 +65,16 @@
             cancel(self, resumeData);
         }
     }];
+}
+
+- (void)hsy_setRequestDatas:(NSDictionary<HSYNetworkResponseRequestDataString,id> *)forDictionary
+{
+    for (HSYNetworkResponseRequestDataString forKey in forDictionary.allKeys) {
+        if ([self respondsToSelector:NSSelectorFromString(forKey)]) {
+            [self setValue:forDictionary[forKey] forKey:forKey];
+        }
+    }
+    _httpStatusCode = self.hsy_urlRequestResponseStatusCode;
 }
 
 @end

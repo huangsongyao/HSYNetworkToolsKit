@@ -8,6 +8,7 @@
 
 #import "HSYViewController.h"
 #import "HSYNetworkRequest.h"
+#import "HSYNetworkTools.h"
 
 @interface HSYViewController ()
 
@@ -23,6 +24,11 @@
     request.requestHeaders = @[@{@"1" : @"new"}, @{@"5" : @"value"}, @{@"4" : @"new2"},];
     NSArray *as = [request hsy_networkingRequestHeaders:@[@{@"1" : @"value"}, @{@"2" : @"value"}, @{@"3" : @"value"}, @{@"4" : @"value"}, ]];
     NSLog(@"%@", as);
+    [[HSYNetworkTools sharedInstance] hsy_baseUrlStringConfigs:@{HSYNetworkingToolsBaseUrlStringForKey : @"http://172.16.4.2/"}];
+    [[[[HSYNetworkTools sharedInstance] hsy_requestByGet:@"api/api-app/homepage/homepageDetail" paramter:nil] deliverOn:[RACScheduler mainThreadScheduler]] subscribeNext:^(HSYNetworkResponse * _Nullable x) { 
+        NSLog(@"");
+    }];
+    //http://172.16.4.2/api/api-app/homepage/homepageDetail
 	// Do any additional setup after loading the view, typically from a nib.
 }
 

@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "HSYNetworkRequest.h"
+#import "HSYNetworkRequest.h" 
 #import "AFHTTPSessionManager+RACSignal.h"
 #import "AFURLSessionManager+RACSignal.h"
 
@@ -85,7 +85,7 @@ FOUNDATION_EXPORT HSYNetworkingToolsUrlSession const _Nullable HSYNetworkingTool
  @return RACSignal
  */
 - (RACSignal<HSYNetworkResponse *> *)hsy_requestByGet:(NSString *)path
-                       paramter:(NSDictionary *)paramter;
+                       paramter:(nullable NSDictionary *)paramter;
 
 /**
  http-post请求
@@ -105,7 +105,7 @@ FOUNDATION_EXPORT HSYNetworkingToolsUrlSession const _Nullable HSYNetworkingTool
  @return RACSignal
  */
 - (RACSignal<HSYNetworkResponse *> *)hsy_requestByPost:(NSString *)path
-                                              paramter:(NSDictionary *)paramter;
+                                              paramter:(nullable NSDictionary *)paramter;
 
 #pragma mark - File Methods
 

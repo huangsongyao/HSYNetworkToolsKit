@@ -36,7 +36,7 @@
             return fileURL;
         } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
             if (error) {
-                NSLog(@"request failure, error : %@, url = %@", error, error.userInfo[NSURLErrorFailingURLStringErrorKey]);
+                NSLog(@"request failure, error : %@, url = %@", error, url);
             }
             [RACSignal hsy_performSendSignal:subscriber
                                    forObject:[[HSYNetworkResponse alloc] initWithTask:downloadTask
@@ -69,10 +69,10 @@
             }
         } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
             if (error) {
-                NSLog(@"request failure, error : %@, url = %@", error, error.userInfo[NSURLErrorFailingURLStringErrorKey]);
+                NSLog(@"request failure, error : %@, url = %@", error, url);
             }
             [RACSignal hsy_performSendSignal:subscriber
-                                   forObject:[[HSYNetworkResponse alloc] initWithTask:uploadTask
+                                   forObject:[[HSYNetworkResponse alloc] initWithTask:uploadTask 
                                                                          withResponse:responseObject
                                                                                 error:error
                                                                    httpRequestMethods:type]];

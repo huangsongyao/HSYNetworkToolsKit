@@ -7,6 +7,7 @@
 
 #import "HSYNetworkTools.h"
 #import "HSYToolsMacro.h"
+#import "RACSignal+Convenients.h"
 
 //请求域名的配置key
 HSYNetworkingToolsBaseUrl const HSYNetworkingToolsBaseUrlStringForKey                          = @"baseUrlString";
@@ -254,26 +255,40 @@ static HSYNetworkTools *networkTools = nil;
 
 - (RACSignal *)hsy_requestByGet:(NSString *)path requestParamter:(HSYNetworkRequest *)paramter
 {
-    [self hsy_resetRequestHeaders:paramter];
-    return [self hsy_requestByGet:path paramter:paramter.paramter];
+    @weakify(self);
+    return [RACSignal hsy_signalSubscriber:^(id<RACSubscriber>  _Nonnull subscriber) {
+        @strongify(self);
+        [self hsy_resetRequestHeaders:paramter];
+        NSString *url = [self hsy_networkingToolUrlString:path];
+        [[[self.hsy_httpSessionManager hsy_getRequest:url paramters:(paramter.paramter ? paramter.paramter : @{})] deliverOn:[RACScheduler currentScheduler]] subscribeNext:^(HSYNetworkResponse * _Nullable x) {
+            [RACSignal hsy_performSendSignal:subscriber forObject:x];
+        }];
+    }];
 }
 
-- (RACSignal *)hsy_requestByGet:(NSString *)path paramter:(NSDictionary *)paramter
+- (RACSignal *)hsy_requestByGet:(NSString *)path paramter:(nullable NSDictionary *)paramter
 {
-    NSString *url = [self hsy_networkingToolUrlString:path];
-    return [self.hsy_httpSessionManager hsy_getRequest:url paramters:paramter];
+    HSYNetworkRequest *requestObject = [[HSYNetworkRequest alloc] initWithParamters:paramter];
+    return [self hsy_requestByGet:path requestParamter:requestObject];
 }
 
 - (RACSignal *)hsy_requestByPost:(NSString *)path requestParamter:(HSYNetworkRequest *)paramter
 {
-    [self hsy_resetRequestHeaders:paramter];
-    return [self hsy_requestByPost:path paramter:paramter.paramter];
+    @weakify(self);
+    return [RACSignal hsy_signalSubscriber:^(id<RACSubscriber>  _Nonnull subscriber) {
+        @strongify(self);
+        [self hsy_resetRequestHeaders:paramter];
+        NSString *url = [self hsy_networkingToolUrlString:path];
+        [[[self.hsy_httpSessionManager hsy_postRequest:url paramters:(paramter.paramter ? paramter.paramter : @{})] deliverOn:[RACScheduler currentScheduler]] subscribeNext:^(HSYNetworkResponse * _Nullable x) {
+            [RACSignal hsy_performSendSignal:subscriber forObject:x];
+        }];
+    }];
 }
 
-- (RACSignal *)hsy_requestByPost:(NSString *)path paramter:(NSDictionary *)paramter
+- (RACSignal *)hsy_requestByPost:(NSString *)path paramter:(nullable NSDictionary *)paramter
 {
-    NSString *url = [self hsy_networkingToolUrlString:path];
-    return [self.hsy_httpSessionManager hsy_getRequest:url paramters:paramter];
+    HSYNetworkRequest *requestObject = [[HSYNetworkRequest alloc] initWithParamters:paramter];
+    return [self hsy_requestByPost:path requestParamter:requestObject];
 }
 
 #pragma mark - File Methods

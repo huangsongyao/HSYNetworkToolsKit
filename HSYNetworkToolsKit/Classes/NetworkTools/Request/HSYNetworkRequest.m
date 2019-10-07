@@ -31,6 +31,34 @@
 
 @implementation HSYNetworkRequest
 
+- (instancetype)initWithParamters:(id)paramter
+{
+    return [self initWithParamters:paramter requestHeaders:@[]];
+}
+
+- (instancetype)initWithParamters:(id)paramter
+                   requestHeaders:(NSArray<NSDictionary *> *)headers
+{
+    return [self initWithParamters:paramter
+                    requestHeaders:headers
+                  showErrorMessage:YES
+                 showResultMessage:YES];
+}
+
+- (instancetype)initWithParamters:(id)paramter
+                   requestHeaders:(NSArray<NSDictionary *> *)headers
+                 showErrorMessage:(BOOL)showError
+                showResultMessage:(BOOL)showResult
+{
+    if (self = [super init]) {
+        _paramter = paramter;
+        _requestHeaders = headers;
+        _showErrorMessage = showError;
+        _showResultMessage = showResult;
+    }
+    return self;
+}
+
 - (NSArray<NSDictionary *> *)hsy_networkingRequestHeaders:(NSArray<NSDictionary *> *)originalRequestHeaders
 {
     /*
