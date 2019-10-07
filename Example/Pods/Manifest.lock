@@ -25,7 +25,7 @@ PODS:
     - JSONModel
     - ReactiveObjC
     - SDWebImage
-  - HSYNetworkToolsKit (0.1.0):
+  - HSYNetworkToolsKit (0.1.1):
     - AFNetworking
     - HSYMacroKit
     - HSYMethodsToolsKit
@@ -70,7 +70,7 @@ SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   HSYMacroKit: 7fc219acbbef969459df74f5b07f3939b8ed4149
   HSYMethodsToolsKit: 447e03ab1d1424fb3e8d86b725bca4bedd057317
-  HSYNetworkToolsKit: 606d504b174475ec5fd70de819376737c91c0af3
+  HSYNetworkToolsKit: 48e6612ab617656db5a5e63ed08e253991e1d3af
   JSONModel: 02ab723958366a3fd27da57ea2af2113658762e9
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 5fcdb02cc35e05fc35791ec514b191d27189f872
