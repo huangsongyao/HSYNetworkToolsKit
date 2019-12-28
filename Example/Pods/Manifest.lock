@@ -44,7 +44,7 @@ DEPENDENCIES:
   - HSYNetworkToolsKit (from `../`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - AFNetworking
     - FBSnapshotTestCase
     - JSONModel
@@ -81,4 +81,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 252dedef4661cba004d3af952ea4807bd824674f
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.9.0.beta.2
